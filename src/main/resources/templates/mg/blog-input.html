@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="/lib/editormd/css/editormd.min.css">
+<head th:replace="_fragments :: head(~{::title})">
+    <title>管理我的博客</title>
+</head>
+
+<body>
+<nav th:replace="mg_fragment :: nav(0)"></nav>
+<div th:replace="_fragments :: log"></div>
+<div  class="m-container m-padded-tb-big">
+    <div class="ui container">
+        <form id="blog-form" action="#" method="post" class="ui form">
+            <input type="hidden" name="id"  th:value="${blog?.id}!=null ? ${blog.id} :0">
+            <input type="hidden" name="introduction">
+            <input type="hidden" name="state">
+            <input type="hidden" name="firstPicture"  >
+            <div class="required field">
+                <div class="ui left labeled input">
+                    <label class="ui teal basic label">标题</label>
+                    <input type="text" name="title"  placeholder="标题" th:value="${blog?.title}">
+                </div>
+            </div>
+
+
+<!--            <div class="required field">-->
+<!--                <div class="ui left labeled input">-->
+<!--                    <label class="ui teal basic label">首图</label>-->
+<!--                    <input type="text" name="firstPicture"  placeholder="首图引用地址" th:value="${blog?.firstPicture}">-->
+<!--                </div>-->
+<!--            </div>-->
+
+            <div  id="md-content">
+                <textarea  name="content"  placeholder="博客描述..." th:text="${blog?.content}"></textarea>
+            </div>
+
+            <div class="inline fields">
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input type="checkbox" id="shareStatement" name="canReprint" checked th:checked="${blog?.canReprint}">
+                        <label for="shareStatement">转载声明</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input type="checkbox" id="appreciation" name="canAdmire" checked th:checked="${blog?.canAdmire}">
+                        <label for="appreciation">赞赏</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input type="checkbox" id="commentabled" name="canComment" checked th:checked="${blog?.canComment}">
+                        <label for="commentabled">评论</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input type="checkbox" id="top" name="top" checked th:checked="${blog?.top}">
+                        <label for="top">置顶</label>
+                    </div>
+                </div>
+            </div>
+            <div class="required field">
+                <div class="ui left labeled action input">
+                    <label class="ui compact teal basic label">分类</label>
+                    <div class="ui fluid selection dropdown">
+                        <input type="hidden" name="type.name" th:value="${blog?.type?.name}">
+                        <i class="dropdown icon"></i>
+                        <div class="default text" >分类</div>
+                        <div class="menu">
+                            <div class="item" th:each="type : ${session.types}" th:text="${type.name}" ></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui error message"></div>
+
+            <div class="ui right aligned container">
+                <button type="button" class="ui button" onclick="window.history.go(-1)" >返回</button>
+                <button type="button" class="ui secondary button" onclick="save(true)">保存</button>
+                <button type="button" class="ui teal button" onclick="push()">发布</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script th:replace="_fragments :: dropdown"></script>
+<script src="/lib/editormd/editormd.min.js"></script>
+<script type="text/javascript">
+    var contentEditor;
+    $(function() {
+        contentEditor = editormd("md-content", {
+            width   : "100%",
+            height : 600,
+            syncScrolling : "single",
+            path    : "/lib/editormd/lib/",
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL: "/mg/fileUpload",
+        });
+    });
+</script>
+
+
+
+<script>
+    //自动保存
+    $(function () {
+        setInterval(function () {
+            var txt = $('[name="content"]').text();
+            if(txt !== ''){
+                save(false);
+            }
+        }, 30000);
+    })
+
+    var form = $('#blog-form');
+
+    function save(show) {
+        initForm(false);
+        var formData = form.serialize();
+        $.ajax({
+            type: "POST",
+            url: "/mg/blog/save/ajax",
+            processData:true,
+            data:formData,
+            success: function(data){
+                // $("#result").html("保存成功");
+                // alert(data.blogID)
+                $('[name="id"]').val(data.blogID);
+                if( show && data.success === '1'){
+                    alert("保存成功")
+                }
+            }
+        });
+    }
+
+
+
+    function push(){
+        initForm(true);
+        form.attr('action','/mg/blog/save/push');
+        form.submit();
+    }
+
+    function initForm(push){
+        $('[name="state"]').val(push);
+        var imgUrl = $(".editormd-preview img").attr("src")
+        $('[name="introduction"]').val($(".editormd-preview").text());
+        if(imgUrl){
+            $('[name="firstPicture"]').val(imgUrl);
+        }
+
+    }
+
+
+    $('.ui.form').form({
+        fields : {
+            title : {
+                identifier: 'title',
+                rules: [{
+                    type : 'empty',
+                    prompt: '请输入博客标题'
+                }]
+            },
+            content : {
+                identifier: 'content',
+                rules: [{
+                    type : 'empty',
+                    prompt: '请输入博客内容'
+                }]
+            },
+            typeId : {
+                identifier: 'type.name',
+                rules: [{
+                    type : 'empty',
+                    prompt: '标题：请输入博客分类'
+                }]
+            },
+        }
+    });
+</script>
+</body>
+</html>

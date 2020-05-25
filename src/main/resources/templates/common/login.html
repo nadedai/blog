@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="/css/my-css.css">
+<head th:replace="_fragments :: head(~{::title})">
+  <title>博客管理登录</title>
+</head>
+<body>
+  <div style="margin: 0 auto; /*水平居中*/
+            position: relative;
+            top: 40%; /*偏移*/
+            transform: translateY(-50%);
+            max-width: 30em">
+   <div class="ui container" >
+     <div class="ui middle aligned center aligned grid">
+       <div class="column">
+         <h2 class="ui teal image header">
+           <div class="content">
+             管理后台登录
+           </div>
+         </h2>
+         <form class="ui large form"  id="login" method="post" th:action="@{/login/login}" >
+           <div class="ui  segment">
+             <div class="field">
+               <div>
+                 <label class="ui left icon input">
+                   <i class="user icon"></i>
+                   <input type="text" name="username" autocomplete="on" placeholder="用户名">
+                 </label>
+               </div>
+             </div>
+             <div class="field">
+               <div >
+                 <label class="ui left icon input">
+                   <i class="lock icon"></i>
+                   <input type="password" name="password" autocomplete="on" placeholder="密码">
+                 </label>
+               </div>
+             </div>
+             <button  class="ui fluid large teal submit button">登   录</button>
+           </div>
+           <div class="ui mini negative message"
+                th:unless="${#strings.isEmpty(msg)}" th:text="${msg}"></div>
+         </form>
+       </div>
+     </div>
+   </div>
+</div>
+  <script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script>
+  $('.ui.form').form({
+    fields : {
+      username : {
+        identifier: 'username',
+        rules: [{
+          type : 'empty',
+          prompt: '请输入用户名'
+        }]
+      },
+      password : {
+        identifier: 'password',
+        rules: [{
+          type : 'empty',
+          prompt: '请输入密码'
+        }]
+      }
+    }
+  });
+
+  $(function(){
+    // 判断Cookie中是否有值，有值则回显，反之就不用管了
+    if ($.cookie('username') !=='' && $.cookie('password') !==''){
+      $("[name='username']").val($.cookie('username'));
+      $("[name='password']").val($.cookie('password'));
+      // 这个事件可以模拟“我”直接触发登录的那个点击事件
+      // $('#login').trigger("click");
+      $('#login').submit();
+    }
+  })
+
+</script>
+
+</body>
+</html>

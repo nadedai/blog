@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_fragments :: head(~{::title})">
+
+  <title>分类管理</title>
+
+</head>
+<body>
+<nav th:replace="mg_fragment :: nav(2)"></nav>
+  <div class="ui container">
+    <form action="/mg/type/input" method="post"   class="ui form" th:object="${type}"  >
+      <input type="hidden">
+      <div class="field">
+        <div class="ui  left labeled input">
+          <label class="ui teal basic label">名称</label>
+          <input type="text" name="name" placeholder="分类名称" th:value="*{name}">
+
+        </div>
+      </div>
+      <div class="ui negative message" th:if="${#fields.hasErrors('name')}" >
+        <i class="close icon"></i>
+        <div class="header">验证失败</div>
+        <p th:errors="*{name}">提交信息不符合规则</p>
+      </div>
+      <div class="ui error message"></div>
+      <div class="ui right aligned container">
+        <button type="button" class="ui button" onclick="window.location.href='/mg/type'" >返回</button>
+        <button class="ui teal submit button">提交</button>
+      </div>
+
+
+
+    </form>
+    <div th:if="${msg}" >
+      <div class="ui mini positive message"
+           th:if="${#strings.contains(msg,'成功')}" th:text="${msg}"></div>
+      <div class="ui mini negative message"
+           th:if="${#strings.contains(msg,'失败')}" th:text="${msg}"></div>
+    </div>
+<!--    th:if="${#fields.hasErrors('name')}"  th:errors="*{name}"-->
+
+  </div>
+
+<script >
+  $('.ui.form').form({
+    fields : {
+      title : {
+        identifier: 'name',
+        rules: [{
+          type : 'empty',
+          prompt: '请输入分类名称'
+        }]
+      }
+    }
+  });
+
+  // var message = [[${#fields}]];
+  // console.log(message+"xxx");
+</script>
+
+
+</body>
+</html>

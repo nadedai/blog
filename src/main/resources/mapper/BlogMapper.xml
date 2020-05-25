@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhtt.blog.mapper.BlogMapper">
+    <select id="findPage" resultMap="rm1">
+		select *,type.id as type_id,user.id as user_id from blog,type,user where blog.type = type.id and blog.userID = user.id
+		<if test="state != null">
+			and state = #{state}
+		</if>
+		<if test="type != null and type.id != null and type.id != 0">
+			and type.id = #{type.id}
+		</if>
+	</select>
+
+	<select id="findAll" resultMap="rm1">
+		select *,type.id as type_id from blog,type where blog.type = type.id
+		<if test="id != null and id != 0">
+			and id = #{id}
+		</if>
+		<if test="state != null">
+			and state = #{state}
+		</if>
+		<if test="type != null and type.id != 0">
+			and type = #{type.id}
+		</if>
+		<if test="top != null">
+			and top = #{top}
+		</if>
+	</select>
+
+	<select id="findOne" resultMap="rm1">
+		select *,type.id as type_id from blog,type where blog.type = type.id and blog.id = #{id}
+	</select>
+
+	<delete id="delete">
+		delete from blog where id = #{id}
+	</delete>
+
+	<resultMap id="rm1" type="blog">
+		<id property="id" column="id"/>
+		<result property="title" column="title"/>
+		<result property="content" column="content"/>
+		<result property="introduction" column="introduction"/>
+		<result property="author" column="author"/>
+		<result property="watched" column="watched"/>
+		<result property="state" column="state"/>
+		<result property="top" column="top"/>
+		<result property="firstPicture" column="first_picture"/>
+		<result property="canComment" column="can_comment"/>
+		<result property="canReprint" column="can_reprint"/>
+		<result property="canAdmire" column="can_admire"/>
+		<result property="createDate"  column="create_Date"  jdbcType="TIMESTAMP" />
+		<result property="updateDate" column="update_Date"  jdbcType="TIMESTAMP"/>
+		<association property="type" javaType="type" >
+			<id property="id" column="type_id"/>
+			<id property="name" column="name"/>
+		</association>
+		<association property="user" javaType="user" >
+			<id property="id" column="user_id"/>
+			<id property="username" column="username"/>
+			<id property="nickname" column="nickname"/>
+		</association>
+	</resultMap>
+	
+	<insert id="insert" >
+		insert into blog (id,type,userID,title,content,introduction,first_picture,state,can_comment,can_reprint,can_admire,top,update_date,create_date)
+		value (
+		default ,
+		#{type.id},
+		#{user.id},
+		#{title},
+		#{content},
+		#{introduction},
+		#{firstPicture},
+		#{state},
+		#{canComment},
+		#{canReprint},
+		#{canAdmire},
+		#{top},
+		#{updateDate},
+		#{createDate})
+	</insert>
+
+	<update id="update">
+		update blog set
+ 			type = #{blog.type.id},
+			title = #{blog.title},
+			content=#{blog.content},
+			state = #{blog.state},
+			<if test="blog.watched != 0">
+				watched = #{blog.watched},
+			</if>
+			introduction=#{blog.introduction},
+			first_picture=#{blog.firstPicture},
+			can_comment=#{blog.canComment},
+			can_reprint=#{blog.canReprint},
+			can_admire=#{blog.canAdmire},
+			top=#{blog.top},
+			update_date=#{blog.updateDate}
+		where id = #{id}
+	</update>
+
+	<update id="updateState">
+		update blog set state = #{state} where id = #{id}
+	</update>
+</mapper>

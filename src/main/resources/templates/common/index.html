@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_fragments :: head(~{::title})">
+  <title>HHTTのBlog</title>
+</head>
+<body>
+  <nav th:replace="_fragments :: nav(1)"></nav>
+    <div class="ui container m-main">
+      <div class="ui  stackable grid">
+        <div class="eleven wide column">
+          <div class="ui top attached  segment">
+            <div class="ui padded vertical segment " th:each="blogTop : ${blogsTop}">
+              <div th:replace="_fragments :: list(${#strings.length(blogTop.firstPicture)>0},${blogTop})"></div>
+            </div>
+            <div class="ui padded vertical segment " th:each="_blog : ${page.content}">
+              <div th:replace="_fragments :: list(${#strings.length(_blog.firstPicture)>0},${_blog})"></div>
+            </div>
+          </div>
+
+          <div class="ui bottom attached segment" th:unless="${page.firstPage &&page.lastPage }  ">
+            <div class="ui middle aligned two column grid">
+              <div class="column">
+                <a href="#" class="ui mini teal basic button"
+                   th:href="@{/index(page=${page.pageNum}-1)}" th:unless="${page.firstPage}">上一页</a>
+              </div>
+              <div class="right aligned column">
+                <a href="#"  class="ui mini teal basic button"
+                   th:href="@{/index(page=${page.pageNum}+1)}" th:unless="${page.lastPage}">下一页</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="five wide column">
+          <div class="ui segments">
+            <div class="ui secondary segment">
+              <div class="ui two column grid">
+                <div class="column">
+                  <i class="idea icon"></i>分类
+                </div>
+                <div class="right aligned column">
+                  <a href="#" target="_blank">more <i class="angle double right icon"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="ui teal segment">
+              <div class="ui fluid vertical menu" >
+                <a href="#"  target="_blank" class="item"  th:each="item :${typeCountMap}"
+                   th:unless="${item.value} <=0 "
+                   th:href="@{/index(typename=${item.key.name})}">
+                  <span th:text="${item.key.name}">学习日志</span>
+                  <div class="ui teal basic left pointing label" th:text="${item.value}">13</div>
+                </a>
+              </div>
+            </div>
+
+          </div>
+      </div>
+    </div>
+
+    </div>
+  <footer th:replace="_fragments :: footer"></footer>
+
+
+
+
+</body>
+</html>

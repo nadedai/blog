@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhtt.blog.mapper.IPMapper">
+	<select id="find" resultType="ip">
+		select * from ip
+		<where>
+			<if test="ip != null  and ip != ''">
+				and ip = #{ip}
+			</if>
+			<if test="blogID != null  and blogID != 0">
+				and blogID = #{blogID}
+			</if>
+
+		</where>
+	</select>
+
+	<insert id="insert">
+		insert into ip value (default,#{ip},#{blogID})
+	</insert>
+
+</mapper>

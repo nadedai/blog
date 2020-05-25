@@ -1,0 +1,52 @@
+<configuration>
+    <property name="Console_pattern"
+              value="%highlight(%-5level) %magenta(%d{HH:mm:ss} %logger):%cyan(%m%n)"/>
+    <appender name="MySTDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${Console_pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%-5level]%d{HH:mm:ss} %logger{0}:%m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="MyFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/%d{yyyy-MM-dd}-my.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%-5level]%d{HH:mm:ss} %logger{0}:%m%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="Error">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="MySTDOUT"/>
+    </root>
+
+<!--    <logger level="Debug" name="com.hhtt.blog.BlogApplicationTests" additivity="false">-->
+<!--        <appender-ref ref="MySTDOUT"/>-->
+<!--        <appender-ref ref="MyFILE"/>-->
+<!--    </logger>-->
+
+<!--    <logger level="Debug" name="com.hhtt.blog.mapper" additivity="false">-->
+<!--        <appender-ref ref="MySTDOUT"/>-->
+<!--        <appender-ref ref="MyFILE"/>-->
+<!--    </logger>-->
+
+    <logger level="Debug" name="com.hhtt.blog" additivity="false">
+        <appender-ref ref="MySTDOUT"/>
+        <appender-ref ref="MyFILE"/>
+    </logger>
+
+<!--    <logger level="Error" name="com.hhtt.blog.BlogApplication" additivity="false">-->
+<!--        <appender-ref ref="MySTDOUT"/>-->
+<!--    </logger>-->
+
+</configuration>

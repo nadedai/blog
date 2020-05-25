@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhtt.blog.mapper.TypeMapper">
+	<select id="findOne" resultType="type">
+		select * from type
+		<where>
+			<if test="id != null  and id != 0">
+				id = #{id}
+			</if>
+			<if test="name != null  and name != ''">
+				and name = #{name}
+			</if>
+		</where>
+	</select>
+
+
+
+
+	<select id="findAll" resultType="type">
+		select * from type
+	</select>
+
+	<insert id="save">
+		insert into type value (default,#{name})
+	</insert>
+
+	<delete id="deleteOne">
+		delete from type
+		<where>
+			<if test="id != null  and id != 0">
+				id = #{id}
+			</if>
+			<if test="name != null  and name != ''">
+				and name = #{name}
+			</if>
+		</where>
+	</delete>
+
+	<update id="updateName">
+		update type set name = #{name} where id = #{id}
+	</update>
+
+</mapper>

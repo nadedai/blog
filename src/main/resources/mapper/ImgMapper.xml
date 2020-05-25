@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhtt.blog.mapper.ImgMapper">
+    <select id="findAll" resultType="img">
+        select * from img
+        <where>
+            <if test="id != null  and id != 0">
+                id = #{id}
+            </if>
+            <if test="name != null  and name != ''">
+                and name = #{name}
+            </if>
+            <if test="rowName != null  and rowName != ''">
+                and rowname = #{rowname}
+            </if>
+            <if test="md5 != null  and md5 != ''">
+                and md5 = #{md5}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert">
+        insert into img  value (default,#{name},#{rowname},#{md5})
+    </insert>
+</mapper>

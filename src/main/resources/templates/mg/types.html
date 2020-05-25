@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_fragments :: head(~{::title})">
+
+  <title>分类管理</title>
+
+</head>
+<body>
+  <nav th:replace="mg_fragment :: nav(2)"></nav>
+
+    <div class="ui container">
+<!--      <div class="ui success message" >-->
+<!--        <i class="close icon"></i>-->
+<!--        <div class="header">提示：</div>-->
+<!--      </div>-->
+      <table class="ui compact celled teal table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>名称</th>
+            <th class="right aligned">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr th:each="type,iterStat : ${page.content}">
+              <td class="collapsing" th:text="${iterStat.count}"  >1</td>
+              <td th:text="${type.name}">刻意练习清单</td>
+              <td class="right aligned collapsing">
+                <button th:href="@{/mg/type/edit(id=${type.id},name=${type.name})}" th:onclick="show_edit([[${type.name}]],this)"
+                        class="ui mini teal basic button">编辑</button>
+                <button th:href="@{/mg/type/delete(id=${type.id},name=${type.name})}"  onclick="show_confirm(this)"
+                        class="ui mini red basic button">删除</button>
+              </td>
+            </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th colspan="3" >
+              <div class="ui mini pagination menu">
+                <a class=" item" th:href="@{/mg/type(page=${page.pageNum}-1)}" th:unless="${page.firstPage}">上一页</a>
+                <a class=" item" th:href="@{/mg/type(page=${page.pageNum}+1)}" th:unless="${page.lastPage}">下一页</a>
+              </div>
+              <a href="/mg/type/input" class="ui right floated small primary icon button">新增</a>
+            </th>
+          </tr>
+        </tfoot>
+      </table>
+      <div th:if="${msg}" >
+        <div class="ui mini positive message"
+             th:if="${#strings.contains(msg,'成功')}" th:text="${msg}"></div>
+        <div class="ui mini negative message"
+             th:if="${#strings.contains(msg,'失败')}" th:text="${msg}"></div>
+      </div>
+    </div>
+
+  <script type="text/javascript">
+      function show_confirm(objInfo)
+      {
+          if (confirm("确定删除吗？"))
+          {
+              window.location.href=$(objInfo).attr("href");
+          }
+      }
+
+      function show_edit(name,objInfo){
+        var newName = prompt("修改类型", name);
+        if(null==newName || "" === newName){
+          return false;
+        }
+        var href = $(objInfo).attr("href");
+        var oldName = "name=" +name;
+        newName = "name=" +newName;
+        href= href.replace(oldName,newName);
+        window.location.href = href
+
+      }
+  </script>
+<!--  <script th:inline="javascript">-->
+<!--    var message = [[*{content}]];-->
+<!--    console.log(message);-->
+<!--  </script>-->
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "properties": [
+    {
+      "name": "mvc.static-path-pattern",
+      "type": "java.lang.String",
+      "description": "Description for mvc.static-path-pattern."
+    },
+    {
+      "name": "spring.mvc.resources.chain.strategy.content.enabled",
+      "type": "java.lang.String",
+      "description": "Description for spring.mvc.resources.chain.strategy.content.enabled."
+    },
+    {
+      "name": "spring.servlet.multipart.file.upload-dir=",
+      "type": "java.lang.String",
+      "description": "Description for spring.servlet.multipart.file.upload-dir=."
+    }
+  ] }

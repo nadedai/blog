@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_fragments :: head(~{::title})">
+    <title>管理我的博客</title>
+</head>
+<body>
+<nav th:replace="mg_fragment :: nav(1)"></nav>
+<div class="ui container">
+    <div  class="ui secondary segment form">
+        <input type="hidden" name="id" >
+        <div class="inline fields">
+            <div class="field">
+                <input type="text" name="title" placeholder="标题">
+            </div>
+            <div class="field">
+                <div class="ui labeled action input">
+                    <div class="ui type selection dropdown">
+                        <input type="hidden" name="typeId">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">类型</div>
+                        <div class="menu"  >
+                            <div class="item" th:each="type : ${session.types}" th:text="${type.name}" ></div>
+                        </div>
+                    </div>
+                    <button id="clear-btn" class="ui compact button">clear</button>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui checkbox">
+                    <input type="checkbox" id="recommend" name="recommend">
+                    <label for="recommend">推荐</label>
+                </div>
+            </div>
+            <div class="field">
+                <button  type="button" id="search-btn" class="ui mini teal basic button"><i class="search icon"></i>搜索</button>
+            </div>
+        </div>
+    </div>
+    <div id="table-containe">
+        <table th:fragment="blogList" class="ui celled compact teal table">
+            <thead>
+            <tr >
+                <th>ID</th>
+                <th>标题</th>
+                <th>类型</th>
+                <th>状态</th>
+                <th>创建时间</th>
+                <th>更新时间</th>
+                <th class="center aligned">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="blog,iterStat : ${page.content}">
+                <td class="collapsing" th:text="${iterStat.count}">1</td>
+                <td th:text="${blog.title}">标题</td>
+                <td class="collapsing" th:text="${blog.type.name}">类型</td>
+                <td class="collapsing" th:text="${blog.state} ? '已发布':'草稿'">状态</td>
+                <td class="collapsing" th:text="${#dates.format(blog.createDate,'yyyy:MM:dd HH:mm')}">创建时间</td>
+                <td class="collapsing" th:text="${#dates.format(blog.updateDate,'yyyy:MM:dd HH:mm')}">更新时间</td>
+                <td class="right aligned collapsing">
+                    <a class="ui mini teal basic button"
+                       th:href="@{/mg/blog/edit(id=${blog.id})}">编辑</a>
+                    <a class="ui mini teal basic button" th:unless="${blog.state}"
+                       th:href="@{/mg/blog/push(id=${blog.id})}">发布</a>
+                    <button class="ui mini red basic button"
+                       th:href="@{/mg/blog/delete(id=${blog.id})}" onclick="show_confirm(this)">删除</button>
+                    <a class="ui mini red basic button" th:if="${blog.state}"
+                       th:href="@{/mg/blog/unPush(id=${blog.id})}">取消发布</a>
+
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="7">
+                    <div class="ui mini pagination menu">
+                        <a class="item" th:href="@{/mg/blog(page=${page.pageNum}-1)}"
+                           th:unless="${page.firstPage}">上一页</a>
+                        <a class="item" th:href="@{/mg/blog(page=${page.pageNum}+1)}"
+                           th:unless="${page.lastPage}">下一页</a>
+                    </div>
+                    <a href="/mg/blog/input"  class="ui mini right floated teal basic button">新增</a>
+                </th>
+            </tr>
+            </tfoot>
+        </table>
+        <div th:replace="_fragments :: log"></div>
+    </div>
+</div>
+
+<script th:replace="_fragments :: dropdown"></script>
+<script>
+    function show_confirm(objInfo)
+    {
+        if (confirm("确定删除吗？"))
+        {
+            window.location.href=$(objInfo).attr("href");
+        }
+    }
+</script>
+</body>
+</html>

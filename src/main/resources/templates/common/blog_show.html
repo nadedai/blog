@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_fragments :: head(~{::title})">
+    <title>博客</title>
+</head>
+<link rel="stylesheet" href="/lib/editormd/css/editormd.preview.css" />
+
+<body>
+<nav th:replace="_fragments :: nav(0)"></nav>
+
+<div class="ui container m-main">
+    <div class="ui top attached segment">
+        <div class="ui horizontal link list">
+            <div class="item">
+                <div class="content"><a href="#" class="header">HHTT</a></div>
+            </div>
+            <div class="item">
+                <span th:unless="${blog.createDate}==null" th:text="${#dates.format(blog.updateDate,'yyyy-MM-dd HH:mm')}">2017-10-01</span>
+                <span th:if="${blog.updateDate}==null" th:text="${#dates.format(blog.createDate,'yyyy:MM:dd HH:mm')}">2017-10-01</span>
+            </div>
+            <div class="item">
+                <i class="eye icon"></i> <span th:text="${blog.watched}">>2342</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui  attached segment" style="font-size: 15px" >
+        <h2 class="ui center aligned header" th:text="${blog.title}">关于刻意练习的清单</h2>
+
+        <div id="test-editormd-view2">
+            <textarea id="append-test" style="display:none;"th:text="${blog.content}"></textarea>
+        </div>
+
+
+    </div>
+
+
+    <div  class="ui bottom attached segment" >
+        <!--留言区域列表-->
+        <div id="comment-container"  class="ui teal segment">
+            <div th:fragment="commentList">
+                <div class="ui threaded comments" style="max-width: 100%;">
+                    <h3 class="ui dividing header">评论</h3>
+                    <div class="comment" >
+                        <div class="content" th:each="comment : ${blog.commentList}">
+                            <a class="author" th:if="${comment.userID==1}">
+                                <span >HHTT</span>
+                                <div class="ui mini basic teal left pointing label " style="padding: 0.2em">博主</div>
+                            </a>
+                            <a class="author" th:if="${comment.userID==0}">
+                                <span >游客</span>
+                            </a>
+                            <div class="metadata">
+                                <span class="date" th:text="${#dates.format(comment.createTime,'yyyy:MM:dd HH:mm')}" >Today at 5:42PM</span>
+                            </div>
+                            <div class="text" th:text="${comment.content}">
+                                How artistic!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form id="comment-form" class="ui form" action="/comment" method="post">
+            <input type="hidden" name="blogID" th:value="${blog.id}">
+            <div class="field">
+                <textarea name="content" placeholder="写下你的评论..." style="height: 100px"></textarea>
+            </div>
+            <button class="ui right floated floating  teal submit button" >
+                <i class="edit icon"></i>发布</button>
+            <br>
+        </form>
+    </div>
+
+    </div>
+
+
+<script src="/lib/editormd/lib/marked.min.js"></script>
+<script src="/lib/editormd/lib/prettify.min.js"></script>
+<script src="/lib/editormd/lib/raphael.min.js"></script>
+<script src="/lib/editormd/lib/underscore.min.js"></script>
+<script src="/lib/editormd/lib/sequence-diagram.min.js"></script>
+<script src="/lib/editormd/lib/flowchart.min.js"></script>
+<script src="/lib/editormd/lib/jquery.flowchart.min.js"></script>
+
+<script src="/lib/editormd/editormd.js"></script>
+
+<script type="text/javascript">
+    $(function() {
+        var testEditormdView2;
+        testEditormdView2 = editormd.markdownToHTML("test-editormd-view2", {
+            htmlDecode      : "style,script,iframe",  // you can filter tags decode
+            path    : "/lib/editormd/lib/",
+            emoji           : true,
+            taskList        : true,
+            tex             : true,  // 默认不解析
+            flowChart       : true,  // 默认不解析
+            sequenceDiagram : true,  // 默认不解析
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_fragments :: head(~{::title})">
+    <title>404</title>
+</head>
+<body>
+    <div class="ui error message " style="margin: 0 auto; /*水平居中*/
+            position: relative;
+            top: 40%; /*偏移*/
+            transform: translateY(-50%);
+            max-width: 50em">
+        <div class="ui contianer">
+            <h2>404</h2>
+            <p>对不起，你访问的资源不存在</p>
+        </div>
+    </div>
+</body>
+</html>
